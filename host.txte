@@ -1,3 +1,0 @@
-[DHCP]
-192.168.1.1 ansible_ssh_user=hola ansible_ssh_pass=hola
-192.168.1.151 ansible_python_interpreter=/usr/bin/python3
