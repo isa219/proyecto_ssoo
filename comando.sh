@@ -28,10 +28,11 @@ elif [ "$#" == "1" ]; then
 
         elif [ "$1" == "info" ]; then
 
-                ip=$(ip -c a | tail -6 | grep -E "[0-9]{3}\." | cut -d" " -f6)
+                ip=$(ip -c a | tail -25 | grep -E "[0-9]{3}\." | cut -d" " -f6)
                 estado=$(service isc-dhcp-server status | grep "Active:" | cut -d" " -f7)
 
-                echo "Dirección IP de la maquina: $ip"
+                echo "Direcciones IP de la maquina:"
+		echo "$ip"
                 echo "Estado del servicio: $estado"
 
 	elif [ "$1" == "install" ]; then
@@ -290,8 +291,8 @@ elif [ "$#" == "5" ]; then
 			comprobar_ip=$(echo $4 | grep -E "^([0-9]{1,3}\.){3}[0-9]{1,3}$")
                         if [ "$comprobar_ip" != "" ]; then
 
-				comprobar_mascara=$(echo $5 | grep -E "^[0-9]{2}\:([0-9]{2}\:){4}[0-9]{2}$")
-                                if  [ "$comprobar_mascara" != "" ]; then
+				comprobar_mac=$(echo $5 | grep -E "^[0-9a-zA-Z]{2}\:([0-9a-zA-Z]{2}\:){4}[0-9a-zA-Z]{2}$")
+                                if  [ "$comprobar_mac" != "" ]; then
 
 					sed -i "82s/.*/host $3 {/" /etc/dhcp/dhcpd.conf
 					sed -i "83s/.*/  hardware ethernet $5;/" /etc/dhcp/dhcpd.conf
@@ -326,8 +327,11 @@ elif [ "$#" == "5" ]; then
 			comprobar_ip=$(echo $3 | grep -E "^([0-9]{1,3}\.){3}[0-9]{1,3}$")
                         if [ "$comprobar_ip" != "" ]; then
 
-				sed -i "2s#.*#\"$3\" ansible_ssh_user=\"$4\" ansible_ssh_pass=\"$5\"#" ./host.txt
-				sed -i "3s#.*#\"$3\" ansible_python_interpreter=/usr/bin/python3#" ./host.txt
+				sed -i "2s#.*#$3 ansible_ssh_user=$4 ansible_ssh_pass=$5#" ./host.txt
+				sed -i "3s#.*#$3 ansible_python_interpreter=/usr/bin/python3#" ./host.txt
+
+				ansible-playbook -v install_dhcp.yml --extra-vars ansible_sudo_pass=$5
+				echo "Instalacion con Ansible completada"
 
 			else
 
