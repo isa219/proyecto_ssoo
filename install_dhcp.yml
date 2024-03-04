@@ -26,17 +26,25 @@
         line: 'iface enp0s3 inet dhcp'
       become: yes
 
-    - name: Configurar el archivo dhcpd.conf
-      template:
-        src: dhcpd.conf.j2
-        dest: /etc/dhcp/dhcpd.conf
-      notify: Reiniciar DHCP
+    - name: Configurar el directorio para scripts
+      file:
+        path: "/home/ubuntu/scripts"
+        state: directory
+        mode: '0755'
+      become: yes
+
+    - name: Copiar el script al directorio de scripts
+      copy:
+        src: menu.sh
+        dest: "/home/ubuntu/scripts/menu.sh"
+        mode: '0755'
+      become: yes
 
     - name: Configurar la interfaz para isc-dhcp-server
       lineinfile:
         path: /etc/default/isc-dhcp-server
         regexp: '^INTERFACESv4='
-        line: 'INTERFACESv4="enp0s3"'  # Reemplaza "eth0" con el nombre de tu interfaz
+        line: 'INTERFACESv4="enp0s3"'
       become: yes
 
   handlers:
