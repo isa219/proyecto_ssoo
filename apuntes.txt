@@ -1,0 +1,82 @@
+read -p "Ingresa la dirección IP del host remoto: " remote_ip
+read -p "Ingresa el nombre de usuario SSH del host remoto: " remote_user
+read -s -p "Ingresa la contraseña SSH del host remoto: " remote_pass
+echo
+
+# Validar el formato de la dirección IP
+if ! [[ $remote_ip =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+    echo "Error: Formato de dirección IP inválido. Saliendo..."
+    exit 1
+fi
+
+# Validar que el nombre de usuario SSH no esté vacío
+if [[ -z $remote_user ]]; then
+    echo "Error: El nombre de usuario SSH no puede estar vacío. Saliendo..."
+    exit 1
+fi
+
+# Validar que la contraseña SSH no esté vacía
+if [[ -z $remote_pass ]]; then
+    echo "Error: La contraseña SSH no puede estar vacía. Saliendo..."
+    exit 1
+fi
+
+
+
+
+
+
+
+
+
+
+
+
+sed -i "53s/./subnet $3 netmask $4 {/" /etc/dhcp/dhcpd.conf
+
+                                                                        sed -i "54s/./  range $5 $6;/" /etc/dhcp/dhcpd.conf
+
+                                                                        sed -i "55s/./  option domain-name-servers $8;/" /etc/dhcp/dhcpd.conf
+
+                                                                        sed -i "58s/./  option routers $7;/" /etc/dhcp/dhcpd.conf
+
+                                                                        sed -i "62s/.*/}/" /etc/dhcp/dhcpd.conf
+sed -i "2s#.#"$3" ansible_ssh_user="$4" ansible_ssh_pass="$5"#" ./host.txt
+
+                                sed -i "3s#.#"$3" ansible_python_interpreter=/usr/bin/python3#" ./host.txt
+sed -i "82s/./host $3 {/" /etc/dhcp/dhcpd.conf
+
+                                        sed -i "83s/./  hardware ethernet $5;/" /etc/dhcp/dhcpd.conf
+
+                                        sed -i "84s/./  fixed-address $4;/" /etc/dhcp/dhcpd.conf
+
+                                        sed -i "85s/./}/" /etc/dhcp/dhcpd.conf
+sed -i "17s/.*/INTERFACESv4='$3'/" /etc/default/isc-dhcp-server
+comprobar_mascara=$(echo $4 | grep -E "^([0-9]{1,3}.){3}[0-9]{1,3}$")
+
+                                if  [ "$comprobar_mascara" != "" ]; then
+comprobar_mascara=$(echo $5 | grep -E "^[0-9]{2}:([0-9]{2}:){4}[0-9]{2}$")
+
+                                if  [ "$comprobar_mascara" != "" ]; then
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+echo "$remote_ip ansible_ssh_user=$remote_user ansible_ssh_pass=$remote_pass" > host
+

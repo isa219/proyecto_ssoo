@@ -28,15 +28,15 @@
 
     - name: Configurar el directorio para scripts
       file:
-        path: "/home/ubuntu/scripts"
+        path: "/home/administrador-local/scripts"
         state: directory
         mode: '0755'
       become: yes
 
     - name: Copiar el script al directorio de scripts
       copy:
-        src: menu.sh
-        dest: "/home/ubuntu/scripts/menu.sh"
+        src: script_dhcpd.sh
+        dest: "/home/administrador-local/scripts/script_dhcpd.sh"
         mode: '0755'
       become: yes
 
