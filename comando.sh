@@ -1,5 +1,5 @@
 #!/bin/bash
-
+#hola
 if [ "$#" == "0" ]; then
 
         echo "testing: faltan parametros"
