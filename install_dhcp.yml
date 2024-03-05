@@ -1,0 +1,54 @@
+---
+- name: Instalar y configurar DHCP
+  hosts: DHCP
+  become: yes
+
+  tasks:
+    - name: Actualizar la caché de apt
+      apt:
+        update_cache: yes
+
+    - name: Instalar el servidor DHCP
+      apt:
+        name: isc-dhcp-server
+        state: present
+
+    - name: Crear el archivo /etc/network/interfaces si no existe
+      file:
+        path: /etc/network/interfaces
+        state: touch
+      become: yes
+
+    - name: Configurar la interfaz de red para DHCP
+      lineinfile:
+        path: "/etc/network/interfaces"
+        regexp: '^iface enp0s3'
+        line: 'iface enp0s3 inet dhcp'
+      become: yes
+
+    - name: Configurar el directorio para scripts
+      file:
+        path: "/home/administrador-local/scripts"
+        state: directory
+        mode: '0755'
+      become: yes
+
+    - name: Copiar el script al directorio de scripts
+      copy:
+        src: script_dhcpd.sh
+        dest: "/home/administrador-local/scripts/script_dhcpd.sh"
+        mode: '0755'
+      become: yes
+
+    - name: Configurar la interfaz para isc-dhcp-server
+      lineinfile:
+        path: /etc/default/isc-dhcp-server
+        regexp: '^INTERFACESv4='
+        line: 'INTERFACESv4="enp0s3"'
+      become: yes
+
+  handlers:
+    - name: Reiniciar DHCP
+      service:
+        name: isc-dhcp-server
+        state: restarted
