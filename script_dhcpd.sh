@@ -328,6 +328,9 @@ elif [ "$#" == "5" ]; then
 				sed -i "2s#.*#\"$3\" ansible_ssh_user=\"$4\" ansible_ssh_pass=\"$5\"#" ./host.txt
 				sed -i "3s#.*#\"$3\" ansible_python_interpreter=/usr/bin/python3#" ./host.txt
 
+				sed -i "3s#.*#\"$3\" ansible_python_interpreter=/usr/bin/python3#" ./
+				sed -i "3s#.*#\"$3\" ansible_python_interpreter=/usr/bin/python3#" ./host.txt
+
 			else
 
 				echo "Íntroduce una dirección IP correcta"
